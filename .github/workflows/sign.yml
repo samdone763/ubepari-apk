@@ -6,12 +6,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
       - name: Generate Keystore
         run: |
           keytool -genkey -v -keystore ubepari.keystore -alias ubepari -keyalg RSA -keysize 2048 -validity 10000 -storepass Ubepari2024 -keypass Ubepari2024 -dname "CN=Ubepari PC, OU=App, O=Ubepari, L=Dar es Salaam, S=Tanzania, C=TZ"
       - name: Sign APK
         run: |
-          apksigner sign --ks ubepari.keystore --ks-pass pass:Ubepari2024 --key-pass pass:Ubepari2024 --ks-key-alias ubepari --out ubepari-signed.apk "Ubepari PC-unsigned.apk"
+          ${ANDROID_HOME}/build-tools/34.0.0/apksigner sign --ks ubepari.keystore --ks-pass pass:Ubepari2024 --key-pass pass:Ubepari2024 --ks-key-alias ubepari --out ubepari-signed.apk "Ubepari PC-unsigned.apk"
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
